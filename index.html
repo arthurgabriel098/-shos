@@ -1,0 +1,332 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle — Configurações</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="game">
+    <header class="topbar">
+      <div class="brand"><span class="brand-icon">✦</span> CONTROLE <span class="muted">/ CONFIGURAÇÕES</span></div>
+      <div class="top-tabs">
+  <button class="top-tab" data-top-tab="JOGO">
+    <i class="fa-solid fa-gamepad"></i> JOGO
+  </button>
+  <button class="top-tab" data-top-tab="ÁUDIO">
+    <i class="fa-solid fa-volume-high"></i> ÁUDIO
+  </button>
+  <button class="top-tab" data-top-tab="VÍDEO">
+    <i class="fa-solid fa-display"></i> VÍDEO
+  </button>
+  <button class="top-tab chosen" data-top-tab="CONTROLE">
+    <i class="fa-solid fa-sliders"></i> CONTROLE
+  </button>
+</div>
+      
+<div class="user">
+  ● <span id="user-label">JOGADOR</span>
+  <button id="logout-button" class="button logout-button hidden" type="button">SAIR</button>
+</div>
+
+    </header>
+
+    <main>
+      <div class="heading">
+        <div><p class="kicker">CONFIGURAÇÕES DO JOGADOR</p><h1>CONTROLE</h1></div>
+        <span class="status">● PERFIL PERSONALIZÁVEL</span>
+      </div>
+
+      <section class="preset-bar">
+        <div class="name-field">
+          <label for="preset-name">NOME DA SENSIBILIDADE</label>
+          <input id="preset-name" maxlength="40" placeholder="Minha sensi...">
+        </div>
+        <button id="new-preset" class="button">NOVA</button>
+        <button id="save-preset" class="button primary">SALVAR</button>
+        <button id="show-presets" class="button">MINHAS SENSIS</button>
+      </section>
+
+
+<section class="pros-section" id="sensibilidade-pros">
+  <div class="pros-heading">
+    <div>
+      <span class="pros-eyebrow">FORTNITE • CONTROLE</span>
+      <h2>SENSI DOS PROS</h2>
+      <p>Confira as configurações e aplique a sensi no seu controle.</p>
+    </div>
+    <span class="pros-count">04 JOGADORES</span>
+  </div>
+
+  <div class="pros-grid">
+
+    <article class="pro-card">
+      <div class="pro-photo pro-photo-jxness">
+        
+<img
+  src="https://fortnitebr.com.br/img/posts/d7a032edb1734959238fa1e8b647c4c6.jpg"
+  class="pro-face"
+  alt="JXNESS7"
+  loading="lazy"
+>
+
+        >
+        <span class="pro-tag">PRO PLAYER</span>
+        <div class="pro-player-name">JXNESS7</div>
+      </div>
+
+      <div class="pro-card-info">
+        <h3>JXNESS7</h3>
+        <p>Sensi avançada • Linear</p>
+        <button class="pro-details-btn" data-pro="jxness">VER SENSI</button>
+        <button class="pro-apply-btn" data-apply-pro="jxness">APLICAR SENSI</button>
+      </div>
+    </article>
+
+    <article class="pro-card">
+      <div class="pro-photo pro-photo-curve">
+        <img
+          
+src="https://prosettings.net/wp-content/uploads/Curve-220x220-fitcontain-q99-gb283-s1.png"
+
+          class="pro-face"
+          alt="CURVE"
+          loading="lazy"
+        >
+        <span class="pro-tag">PRO PLAYER</span>
+        <div class="pro-player-name">CURVE</div>
+      </div>
+
+      <div class="pro-card-info">
+        <h3>CURVE</h3>
+        <p>Sensi avançada • Exponencial</p>
+        <button class="pro-details-btn" data-pro="curve">VER SENSI</button>
+        <button class="pro-apply-btn" data-apply-pro="curve">APLICAR SENSI</button>
+      </div>
+    </article>
+
+    <article class="pro-card">
+      <div class="pro-photo pro-photo-teeny">
+   
+<img
+  src="https://auroragg.com/s3/aurora-ams-web/images/bcab14e37f97aff6a758172d52615ff0.png"
+  class="pro-face"
+  alt="T3ENY"
+  loading="lazy"
+>
+
+        <span class="pro-tag">PRO PLAYER</span>
+        <div class="pro-player-name">T3ENY</div>
+      </div>
+
+      <div class="pro-card-info">
+        <h3>T3ENY</h3>
+        <p>Sensi avançada • Exponencial</p>
+        <button class="pro-details-btn" data-pro="teeny">VER SENSI</button>
+        <button class="pro-apply-btn" data-apply-pro="teeny">APLICAR SENSI</button>
+      </div>
+    </article>
+
+    <article class="pro-card">
+      <div class="pro-photo pro-photo-reet">
+        <img
+    
+src="https://prosettings.net/wp-content/uploads/reet-220x220-fitcontain-q99-gb283-s1.png"
+
+
+
+          class="pro-face"
+          alt="REET"
+          loading="lazy"
+        >
+        <span class="pro-tag">PRO PLAYER</span>
+        <div class="pro-player-name">REET</div>
+      </div>
+
+      <div class="pro-card-info">
+        <h3>REET</h3>
+        <p>Sensi avançada • Exponencial</p>
+        <button class="pro-details-btn" data-pro="reet">VER SENSI</button>
+        <button class="pro-apply-btn" data-apply-pro="reet">APLICAR SENSI</button>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="pro-details-panel" id="pro-details-panel" hidden>
+    <div class="pro-details-top">
+      <h3 id="pro-details-title">Configurações do jogador</h3>
+      <button type="button" id="close-pro-details">FECHAR ✕</button>
+    </div>
+    <div id="pro-details-content"></div>
+  </div>
+</section>
+
+
+<section class="analyzer-section" id="shos-analyze">
+  <div class="analyzer-header">
+    <div>
+      <span class="analyzer-eyebrow">SHOS INTELLIGENCE SYSTEM</span>
+      <h2>SHOS <span>ANALYZE</span></h2>
+      <p>Diagnóstico da sua sensibilidade baseado nos sintomas e nas configurações atuais.</p>
+    </div>
+    <span class="analyzer-status">● ANALYZER BETA</span>
+  </div>
+
+  <div class="analyzer-grid">
+    <div class="analyzer-form">
+      <label for="analyzer-symptom">O QUE ACONTECE COM SUA MIRA?</label>
+      <select id="analyzer-symptom">
+        <option value="horizontal_over">Passo do alvo para os lados</option>
+        <option value="horizontal_under">Demoro para alcançar o alvo na horizontal</option>
+        <option value="vertical_over">Minha mira passa da cabeça</option>
+        <option value="vertical_under">Minha mira fica abaixo da cabeça</option>
+        <option value="ads_tracking">Tenho dificuldade para acompanhar mirando (ADS)</option>
+        <option value="drift">A mira se movimenta sozinha (drift)</option>
+        <option value="inconsistent">Minha mira fica inconsistente perto do centro</option>
+        <option value="build_edit">Tenho dificuldade para construir ou editar rápido</option>
+      </select>
+
+      <label for="analyzer-frequency">COM QUE FREQUÊNCIA ACONTECE?</label>
+      <select id="analyzer-frequency">
+        <option value="sometimes">Às vezes</option>
+        <option value="often" selected>Frequentemente</option>
+        <option value="always">Quase sempre</option>
+      </select>
+
+      <label for="analyzer-context">EM QUAL SITUAÇÃO?</label>
+      <select id="analyzer-context">
+        <option value="both">Em várias situações</option>
+        <option value="close">Combates de perto</option>
+        <option value="far">Combates de longe</option>
+        <option value="tracking">Ao acompanhar um adversário</option>
+        <option value="flick">Ao fazer movimentos rápidos</option>
+      </select>
+
+      <button type="button" class="analyzer-button" id="run-analyzer">
+        ANALISAR MINHA SENSI <span>→</span>
+      </button>
+
+      <p class="analyzer-disclaimer">
+        O diagnóstico é uma hipótese baseada nas informações fornecidas.
+        Não substitui testes dentro do jogo.
+      </p>
+    </div>
+
+    <div class="analyzer-result" id="analyzer-result" aria-live="polite">
+      <div class="analyzer-empty-icon">⌖</div>
+      <span class="analyzer-result-label">AGUARDANDO ANÁLISE</span>
+      <h3>Vamos encontrar o possível problema.</h3>
+      <p>Relate o sintoma acima. O SHOS cruzará sua resposta com os valores atuais do controle.</p>
+    </div>
+  </div>
+
+  <div class="analyzer-history">
+    <div class="analyzer-history-heading">
+      <div>
+        <span class="analyzer-eyebrow">SEU PROGRESSO</span>
+        <h3>HISTÓRICO DE DIAGNÓSTICOS</h3>
+      </div>
+      <button type="button" id="clear-analyzer-history">LIMPAR HISTÓRICO</button>
+    </div>
+    <div id="analyzer-history-list">
+      <p class="analyzer-history-empty">Suas análises aparecerão aqui.</p>
+    </div>
+  </div>
+</section>
+
+
+      <div class="content">
+        <nav class="sidebar">
+          <p class="nav-title">CONFIGURAÇÕES</p>
+          <button class="nav-item active" data-section="entrada">◈ <span>Entrada de dados</span></button>
+          <button class="nav-item" data-section="troca">⇄ <span>Troca rápida</span></button>
+          <button class="nav-item" data-section="sensibilidade">⌖ <span>Sensibilidade</span></button>
+          <button class="nav-item" data-section="avancado">✣ <span>Sensibilidade avançada</span></button>
+          <button class="nav-item" data-section="zona">◉ <span>Zona morta do controle</span></button>
+          <button class="nav-item" data-section="ajuste">⊞ <span>Área de ajuste</span></button>
+
+
+          <p class="nav-title">PERFIL</p>
+          <button class="nav-item" id="nav-presets">▤ <span>Presets salvos</span></button>
+          <button class="nav-item" id="nav-reset">↺ <span>Zerar configuração</span></button>
+        </nav>
+
+        <section class="settings">
+          <div class="settings-heading">
+            <div><p class="kicker">OPÇÕES DO CONTROLE</p><h2 id="section-title">ENTRADA DE DADOS</h2></div>
+            <span class="scroll-label">ROLE PARA VER TODAS AS OPÇÕES ↕</span>
+          </div>
+          <div id="settings-list"></div>
+          <div class="settings-footer">
+            <span id="option-count">0 OPÇÕES</span>
+            <span>CONFIGURAÇÃO PERSONALIZADA</span>
+          </div>
+        </section>
+
+        <aside class="info">
+          <div class="info-icon">⌘</div>
+          <p class="kicker">OPÇÃO SELECIONADA</p>
+          <h3 id="info-title">Entrada de dados</h3>
+          <p id="info-description">Escolha uma seção e personalize suas configurações de controle.</p>
+          <div class="info-line"></div>
+          <p class="info-label">PRESET ATUAL</p>
+          <strong id="current-name">Sem nome</strong>
+          <p class="info-label">VALORES PERSONALIZADOS</p>
+          <strong id="changed-count">0</strong>
+          <div class="info-line"></div>
+          <button id="reset-section" class="button full">ZERAR ESTA SEÇÃO</button>
+        </aside>
+      </div>
+    </main>
+
+    <footer><span>INTERFACE INDEPENDENTE INSPIRADA EM MENUS DE JOGO</span><span><kbd>CTRL</kbd> + <kbd>S</kbd> SALVAR NO NAVEGADOR</span></footer>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header"><h2>MINHAS SENSIBILIDADES</h2><button id="close-modal" class="button">FECHAR ✕</button></div>
+      <div id="preset-list"></div>
+    </div>
+  </div>
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-card">
+      <div class="auth-logo">✦ CONTROLE</div>
+      <p class="kicker">SEU PERFIL DE JOGADOR</p>
+      <h1 id="auth-title">ENTRAR</h1>
+      <p id="auth-subtitle" class="auth-note">Entre para acessar sua conta.</p>
+
+      <form id="auth-form">
+        <label class="auth-field">
+          E-MAIL
+          <input id="auth-email" type="email" placeholder="voce@email.com" autocomplete="email" required>
+        </label>
+
+        <label class="auth-field">
+          SENHA
+          <input id="auth-password" type="password" placeholder="Sua senha" autocomplete="current-password" minlength="6" required>
+        </label>
+
+        <label id="confirm-password-field" class="auth-field hidden">
+          CONFIRMAR SENHA
+          <input id="auth-confirm-password" type="password" placeholder="Digite a senha novamente" minlength="6">
+        </label>
+
+        <p id="auth-message" class="auth-message" role="status"></p>
+
+        <button id="auth-submit" class="button primary auth-submit" type="submit">ENTRAR</button>
+      </form>
+
+      <button id="auth-forgot" class="auth-switch" type="button">Esqueci minha senha</button>
+      <button id="auth-switch" class="auth-switch" type="button">Não tem conta? Cadastre-se</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
