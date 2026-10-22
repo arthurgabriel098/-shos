@@ -195,11 +195,19 @@ let presets = loadJSON("sensi.presets", []);
 let currentId = null;
 let currentSection = "entrada";
 let selectedId = null;
+
+
 function saveLocal() {
   localStorage.setItem("sensi.draft", JSON.stringify(values));
   localStorage.setItem("sensi.presets", JSON.stringify(presets));
   updateStats();
+
+  if (typeof queueCloudSave === "function") {
+    queueCloudSave();
+  }
 }
+
+
 function toast(message) {
   const el = $("#toast");
   el.textContent = message;
@@ -862,8 +870,16 @@ function analyzerLoadHistory() {
   }
 }
 
+
 function analyzerSaveHistory(history) {
-  localStorage.setItem(analyzerStorageKey, JSON.stringify(history.slice(0, 30)));
+  localStorage.setItem(
+    analyzerStorageKey,
+    JSON.stringify(history.slice(0, 30))
+  );
+
+  if (typeof queueCloudSave === "function") {
+    queueCloudSave();
+  }
 }
 
 function analyzerAllFields() {
@@ -1366,3 +1382,204 @@ function runShosAnalyzer() {
     }
   }, 2400);
 }
+
+/* ===== SHOS CLOUD SYNC — DADOS POR CONTA ===== */
+
+let shosCloudUserId = null;
+let shosCloudReady = false;
+let shosCloudLoading = false;
+let shosCloudTimer = null;
+let shosCloudVersion = 0;
+let shosCloudLoadPromise = null;
+
+async function shosWriteCloudData(userId) {
+  const payload = {
+    user_id: userId,
+    settings: values,
+    presets: presets,
+    analyzer_history: analyzerLoadHistory(),
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await authClient
+    .from("shos_user_data")
+    .upsert(payload, { onConflict: "user_id" });
+
+  if (error) throw error;
+}
+
+async function shosLoadCloudData(session) {
+  const user = session?.user;
+
+  if (!user) {
+    shosCloudVersion++;
+    shosCloudUserId = null;
+    shosCloudReady = false;
+    shosCloudLoading = false;
+    shosCloudLoadPromise = null;
+    clearTimeout(shosCloudTimer);
+    return;
+  }
+
+  const userId = user.id;
+
+  if (shosCloudUserId === userId && shosCloudReady) {
+    return;
+  }
+
+  if (shosCloudUserId === userId && shosCloudLoading &&
+      shosCloudLoadPromise) {
+    return shosCloudLoadPromise;
+  }
+
+  const version = ++shosCloudVersion;
+
+  shosCloudUserId = userId;
+  shosCloudReady = false;
+  shosCloudLoading = true;
+
+  shosCloudLoadPromise = (async () => {
+    try {
+      const { data, error } = await authClient
+        .from("shos_user_data")
+        .select("settings, presets, analyzer_history")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (version !== shosCloudVersion) return;
+
+      if (data) {
+        // Se já existem dados na nuvem, eles são a fonte principal.
+        values = {
+          ...freshValues(),
+          ...(data.settings || {})
+        };
+
+        presets = Array.isArray(data.presets)
+          ? data.presets
+          : [];
+
+        localStorage.setItem(
+          "sensi.draft",
+          JSON.stringify(values)
+        );
+
+        localStorage.setItem(
+          "sensi.presets",
+          JSON.stringify(presets)
+        );
+
+        localStorage.setItem(
+          analyzerStorageKey,
+          JSON.stringify(
+            Array.isArray(data.analyzer_history)
+              ? data.analyzer_history.slice(0, 30)
+              : []
+          )
+        );
+      } else {
+        // Primeiro acesso: preserva os dados locais e os importa.
+        values = {
+          ...freshValues(),
+          ...loadJSON("sensi.draft", {})
+        };
+
+        presets = loadJSON("sensi.presets", []);
+
+        await shosWriteCloudData(userId);
+
+        if (version !== shosCloudVersion) return;
+      }
+
+      if (version !== shosCloudVersion) return;
+
+      shosCloudReady = true;
+
+      render();
+      renderPresets();
+      analyzerRenderHistory();
+      updateStats();
+
+      toast("Dados sincronizados com sua conta.");
+    } catch (error) {
+      console.error("SHOS Cloud Sync:", error);
+
+      if (version === shosCloudVersion) {
+        shosCloudReady = false;
+        toast("Falha na sincronização. Confira a conexão.");
+      }
+    } finally {
+      if (version === shosCloudVersion) {
+        shosCloudLoading = false;
+        shosCloudLoadPromise = null;
+      }
+    }
+  })();
+
+  return shosCloudLoadPromise;
+}
+
+function queueCloudSave() {
+  if (!shosCloudReady || !shosCloudUserId || shosCloudLoading) {
+    return;
+  }
+
+  clearTimeout(shosCloudTimer);
+
+  const userId = shosCloudUserId;
+  const version = shosCloudVersion;
+
+  shosCloudTimer = setTimeout(async () => {
+    if (
+      !shosCloudReady ||
+      shosCloudUserId !== userId ||
+      shosCloudVersion !== version
+    ) {
+      return;
+    }
+
+    try {
+      await shosWriteCloudData(userId);
+    } catch (error) {
+      console.error("SHOS: erro ao salvar na nuvem:", error);
+      toast("Erro ao salvar na nuvem. Tente novamente.");
+    }
+  }, 600);
+}
+
+// Sincroniza login, logout e troca de conta.
+authClient.auth.onAuthStateChange((_event, session) => {
+  if (!session) {
+    shosCloudVersion++;
+    shosCloudUserId = null;
+    shosCloudReady = false;
+    shosCloudLoading = false;
+    shosCloudLoadPromise = null;
+    clearTimeout(shosCloudTimer);
+    return;
+  }
+
+  if (
+    shosCloudUserId === session.user.id &&
+    (shosCloudReady || shosCloudLoading)
+  ) {
+    return;
+  }
+
+  setTimeout(() => {
+    shosLoadCloudData(session);
+  }, 0);
+});
+
+// Recupera a sessão ao abrir ou atualizar o site.
+authClient.auth.getSession().then(({ data, error }) => {
+  if (error) {
+    console.error("SHOS: erro ao recuperar sessão:", error);
+    return;
+  }
+
+  if (data.session) {
+    shosLoadCloudData(data.session);
+  }
+});
