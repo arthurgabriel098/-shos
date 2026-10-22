@@ -195,7 +195,6 @@ let presets = loadJSON("sensi.presets", []);
 let currentId = null;
 let currentSection = "entrada";
 let selectedId = null;
-
 function saveLocal() {
   localStorage.setItem("sensi.draft", JSON.stringify(values));
   localStorage.setItem("sensi.presets", JSON.stringify(presets));
