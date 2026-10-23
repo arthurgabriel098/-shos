@@ -678,6 +678,10 @@ function formatProValue(key, value) {
   return String(value);
 }
 
+
+
+
+
 function showProDetails(id) {
   const pro = proPresets[id];
   if (!pro) return;
@@ -686,12 +690,22 @@ function showProDetails(id) {
   const title = document.querySelector("#pro-details-title");
   const content = document.querySelector("#pro-details-content");
 
+  if (!panel || !title || !content) return;
+
   title.textContent = "SENSI DE " + pro.name;
 
-  const groups = Object.entries(sections).map(([sectionId, section]) => {
+  // Mostra somente estas três categorias na visualização dos pros.
+  const proSections = ["sensibilidade", "avancado", "zona"];
+
+  const groups = proSections.map(sectionId => {
+    const section = sections[sectionId];
+    if (!section) return "";
+
     const rows = section.fields
-      .filter(field => field[2] !== "action" &&
-        Object.prototype.hasOwnProperty.call(pro.values, field[0]))
+      .filter(field =>
+        field[2] !== "action" &&
+        Object.prototype.hasOwnProperty.call(pro.values, field[0])
+      )
       .map(field => {
         const key = field[0];
         const label = proLabels[key] || field[1];
@@ -702,7 +716,8 @@ function showProDetails(id) {
             <span>${safe(label)}</span>
             <strong>${safe(value)}</strong>
           </div>`;
-      }).join("");
+      })
+      .join("");
 
     return rows ? `
       <div class="pro-setting-group">
@@ -724,37 +739,38 @@ function showProDetails(id) {
   panel.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function applyProPreset(id) {
-  const pro = proPresets[id];
-  if (!pro) return;
 
-  const confirmed = confirm(
-    `Aplicar a sensibilidade de ${pro.name}?\n\n` +
-    "Isso substituirá os valores do rascunho atual, mas não apagará seus presets salvos."
-  );
 
-  if (!confirmed) return;
+/* Abas superiores — SHOS LAB 3D */
+document.querySelectorAll("[data-top-tab]").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll("[data-top-tab]").forEach(item => {
+      item.classList.remove("chosen");
+    });
 
-  values = {
-    ...freshValues(),
-    ...values,
-    ...pro.values
-  };
+    tab.classList.add("chosen");
 
-  currentId = null;
-  document.querySelector("#preset-name").value = pro.name + " (cópia)";
+    const nome = tab.dataset.topTab;
 
-  saveLocal();
-  render();
-  updateStats();
+    if (nome === "CONTROLE") {
+      document.querySelector(".settings").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+      return;
+    }
 
-  toast("Sensi de " + pro.name + " aplicada! Salve como preset se quiser guardá-la.");
+    if (nome === "LAB 3D") {
+      document.querySelector("#lab3d-section").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+      return;
+    }
 
-  document.querySelector(".settings")?.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+    toast(nome + " — esta seção será adicionada futuramente.");
   });
-}
+});
 
 document.querySelectorAll("[data-pro]").forEach(button => {
   button.addEventListener("click", () => {
@@ -934,73 +950,195 @@ function analyzerFormat(key, value) {
   return String(value);
 }
 
-function analyzerGetConfidence(symptom, frequency) {
+
+function analyzerGetConfidence(symptom, frequency, context) {
+  // Mede a qualidade inicial da hipótese, não a chance de sucesso.
   let score = 35;
 
-  if (frequency === "often") score += 10;
-  if (frequency === "always") score += 15;
+  if (frequency === "often") score += 8;
+  if (frequency === "always") score += 12;
 
-  const keys = symptom.keys;
-  const hasRelevantValues = keys.some(key => {
+  const availableValues = symptom.keys.filter(key => {
     const value = analyzerRead(key);
     return value !== undefined && value !== null && value !== "";
-  });
+  }).length;
 
-  if (hasRelevantValues) score += 10;
+  const coverage = availableValues / Math.max(symptom.keys.length, 1);
+  score += Math.round(coverage * 15);
+
+  if (
+    ["close", "far", "tracking", "flick"].includes(context)
+  ) {
+    score += 5;
+  }
+
+  if (symptomIdNeedsHardwareCheck(symptom)) {
+    score -= 5;
+  }
+
+  score = Math.max(20, Math.min(75, score));
 
   return {
-    label: score >= 50 ? "Hipótese inicial" : "Evidência limitada",
-    score: Math.min(score, 60)
+    label: score >= 60
+      ? "Hipótese com mais dados disponíveis"
+      : score >= 45
+        ? "Hipótese inicial"
+        : "Evidência limitada",
+    score
   };
 }
 
-function analyzerBuildRecommendation(symptom) {
-  const key = symptom.primary;
-  const current = analyzerRead(key);
+function symptomIdNeedsHardwareCheck(symptom) {
+  return symptom.keys.includes("rightDeadzone") &&
+    symptom.primary === "rightDeadzone";
+}
 
-  if (symptom.direction === 0) {
+function analyzerBuildRecommendation(symptom, context = "both") {
+  const fields = analyzerAllFields();
+
+  // A recomendação é experimental e altera apenas uma variável.
+  let key = symptom.primary;
+  let direction = symptom.direction;
+  let amount = symptom.amount;
+
+  // Contexto: diferenciar a mira de câmera da mira durante ADS.
+  if (symptom === analyzerSymptoms.ads_tracking) {
+    if (context === "far" || context === "tracking") {
+      key = "aimH";
+      direction = 1;
+      amount = 2;
+    } else if (context === "flick") {
+      key = "aimH";
+      direction = -1;
+      amount = 2;
+    } else if (context === "close") {
+      key = "aimV";
+      direction = 0;
+      amount = 0;
+    } else {
+      key = "aimH";
+      direction = 0;
+      amount = 0;
+    }
+  }
+
+  // Drift exige cautela: aumentar a zona morta pode mascarar
+  // desgaste físico, mas também reduzir a resposta inicial.
+  if (symptom === analyzerSymptoms.drift) {
+    key = "rightDeadzone";
+    direction = 1;
+    amount = 2;
+  }
+
+  // Inconsistência no centro não determina, sozinha,
+  // se a zona morta deve subir ou descer.
+  if (symptom === analyzerSymptoms.inconsistent) {
     return {
       available: false,
-      text: "Ainda não há dados suficientes para escolher uma alteração numérica com segurança. Primeiro, confira os valores atuais e teste uma variável por vez."
+      text:
+        "Faça primeiro um teste de drift com o controle parado. " +
+        "Se a mira se mover sozinha, teste a zona morta direita em " +
+        "pequenos passos. Se não houver drift, compare a resposta " +
+        "no centro antes de decidir se deve aumentar ou reduzir a zona morta.",
+      reason: "A direção do ajuste depende do comportamento do analógico."
     };
   }
 
-  if (typeof current !== "number") {
-    return {
-      available: false,
-      text: "O valor atual dessa configuração não está disponível como número. Confira a configuração antes de definir um teste."
-    };
+  // Para construção/edição, priorizar o ajuste mais relacionado
+  // ao que a pessoa descreveu.
+  if (symptom === analyzerSymptoms.build_edit) {
+    if (context === "flick") {
+      key = "edit";
+      direction = 1;
+      amount = 0.1;
+    } else if (context === "close") {
+      key = "build";
+      direction = 1;
+      amount = 0.1;
+    } else {
+      return {
+        available: false,
+        text:
+          "Escolha qual ação está atrasando: edição ou construção. " +
+          "Sem essa distinção, não é possível selecionar um ajuste " +
+          "numérico responsável.",
+        reason: "Construção e edição exigem testes separados."
+      };
+    }
   }
-const field = analyzerAllFields().find(item => item[0] === key);
+
+  const field = fields.find(item => item[0] === key);
+
   if (!field || field[2] !== "number") {
     return {
       available: false,
-      text: "Não foi possível localizar um controle numérico compatível para este teste."
+      text: "Não há um controle numérico compatível para recomendar um teste."
     };
   }
 
-  const min = field[3];
-  const max = field[4];
+  const current = analyzerRead(key);
+
+  if (typeof current !== "number" || !Number.isFinite(current)) {
+    return {
+      available: false,
+      text: "O valor atual não está disponível como número."
+    };
+  }
+
+  if (direction === 0 || amount <= 0) {
+    return {
+      available: false,
+      text:
+        "Os dados ainda não indicam uma direção segura para alterar esse valor. " +
+        "Mantenha a configuração atual e faça um teste controlado antes de decidir."
+    };
+  }
+
+  const min = Number(field[3]);
+  const max = Number(field[4]);
+  const step = Number(field[5]) || 1;
+
+  // Limita a alteração a um passo pequeno, adequado à escala do campo.
+  const delta = Math.max(step, Math.min(amount, step * 2));
   const proposed = Math.max(
     min,
-    Math.min(max, current + symptom.direction * symptom.amount)
+    Math.min(max, Number((current + direction * delta).toFixed(4)))
   );
 
   if (proposed === current) {
     return {
       available: false,
-      text: "O valor já está no limite dessa direção. Não aplique uma alteração automática; avalie outras possíveis causas."
+      text:
+        "O valor já está no limite nessa direção. Não aplique " +
+        "uma alteração automática; investigue outra causa."
     };
   }
+
+  const labels = {
+    horizontal: "velocidade horizontal da câmera",
+    vertical: "velocidade vertical da câmera",
+    aimH: "velocidade horizontal ao mirar",
+    aimV: "velocidade vertical ao mirar",
+    rightDeadzone: "zona morta direita",
+    build: "multiplicador de construção",
+    edit: "multiplicador de edição"
+  };
 
   return {
     available: true,
     key,
     current,
     proposed,
-    text: `Teste ${analyzerFormat(key, proposed)} em vez de ${analyzerFormat(key, current)}, mantendo as outras configurações iguais. Essa é uma experiência inicial, não uma garantia de correção.`
+    context,
+    text:
+      `Teste a ${labels[key] || key} em ` +
+      `${analyzerFormat(key, proposed)}, comparando com ` +
+      `${analyzerFormat(key, current)}. Mantenha as outras ` +
+      "configurações iguais e reverta se o desempenho piorar.",
+    reason: "Teste de uma variável por vez."
   };
 }
+
 
 function analyzerRenderHistory() {
   const container = document.querySelector("#analyzer-history-list");
@@ -1127,11 +1265,18 @@ function analyzerRenderResult(item, showSavedMessage = true) {
     </div>
 
     <div class="analyzer-diagnosis-block">
-      <h4>CONFIANÇA</h4>
-      <p>${safe(item.confidence.label)} — ${item.confidence.score}%.</p>
-      <p>Este indicador representa apenas a avaliação interna do protótipo, não uma probabilidade real de o ajuste resolver o problema.</p>
-    </div>
-
+   <div class="analyzer-diagnosis-block">
+  <h4>FORÇA DA HIPÓTESE</h4>
+  <p>
+    ${safe(item.confidence.label)} —
+    ${item.confidence.score}% de cobertura indicativa.
+  </p>
+  <p>
+    Este índice considera a frequência relatada, o contexto e
+    a disponibilidade dos valores analisados. Não representa
+    a chance de o ajuste funcionar.
+  </p>
+</div>
     <div class="analyzer-diagnosis-block">
       <h4>COMO VALIDAR</h4>
       <p>Teste em condições semelhantes e altere uma variável por vez. Compare os resultados e restaure o valor anterior se o controle piorar.</p>
@@ -1211,9 +1356,12 @@ function runShosAnalyzerNow() {
   });
 
   // Calcula a recomendação numérica para o sintoma.
-  const recommendation = analyzerBuildRecommendation(symptom);
-  const confidence = analyzerGetConfidence(symptom, frequency);
-
+const confidence = analyzerGetConfidence(
+  symptom,
+  frequency,
+  context
+);
+const recommendation = analyzerBuildRecommendation(symptom, context);
   const frequencyLabels = {
     sometimes: "Às vezes",
     often: "Frequentemente",

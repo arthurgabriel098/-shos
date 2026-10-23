@@ -1364,4 +1364,419 @@ object-position: right center;
     opacity: 1;
     transform: translateY(0);
   }
+} 
+/* ===== SHOS — IDENTIDADE AZUL PROFISSIONAL ===== */
+
+/* Sensi dos Pros */
+.pros-section {
+  background: linear-gradient(145deg, #0c2035, #071629);
+  border-color: #294963;
+}
+
+.pros-eyebrow,
+.pro-setting-group h4 {
+  color: #43d5fa;
+}
+
+.pros-heading h2 {
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.pros-count,
+.pro-tag {
+  border-color: #28618a;
+  color: #80ddff;
+  background: #0b2239;
+}
+
+.pro-card {
+  background: #0c2035;
+  border-color: #294963;
+}
+
+.pro-card:hover {
+  border-color: #43d5fa;
+  box-shadow: 0 8px 24px #147fd01c;
+}
+
+.pro-player-name {
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.pro-card-info h3 {
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-size: 20px;
+  letter-spacing: .6px;
+}
+
+.pro-details-btn,
+#close-pro-details {
+  background: #102943;
+  border-color: #355975;
+}
+
+.pro-details-btn:hover {
+  border-color: #43d5fa;
+  background: #153b5b;
+}
+
+.pro-apply-btn {
+  color: #fff;
+  background: #147fd0;
+  border-color: #43d5fa;
+}
+
+.pro-apply-btn:hover {
+  background: #1597eb;
+}
+
+.pro-details-panel {
+  background: #0c2035;
+  border-color: #294963;
+}
+
+.pro-setting-group {
+  background: #071629;
+  border-color: #294963;
+}
+
+.pro-setting-row {
+  border-bottom-color: #294963;
+}
+
+.pro-setting-row span {
+  color: #b8cada;
+}
+
+/* SHOS Analyze */
+.analyzer-section {
+  background: linear-gradient(145deg, #0c2035, #071629);
+  border-color: #294963;
+}
+
+.analyzer-eyebrow,
+.analyzer-header h2 span,
+.analyzer-result-label,
+.analyzer-diagnosis-block h4 {
+  color: #43d5fa;
+}
+
+.analyzer-status {
+  background: #0b2239;
+  border-color: #28618a;
+  color: #80ddff;
+}
+
+.analyzer-form,
+.analyzer-result {
+  background: #0c2035;
+  border-color: #294963;
+}
+
+.analyzer-form select {
+  background: #081e34;
+  border-color: #355975;
+}
+
+.analyzer-button {
+  background: #147fd0;
+  border-color: #43d5fa;
+  color: #fff;
+}
+
+.analyzer-button:hover {
+  background: #1597eb;
+}
+
+.analyzer-empty-icon {
+  color: #43d5fa;
+  border-color: #28618a;
+  background: #102943;
+}
+
+.analyzer-diagnosis-block {
+  background: #102943;
+  border-color: #294963;
+}
+
+.analyzer-numeric-card {
+  background: #081e34;
+  border-color: #355975;
+}
+
+.analyzer-numeric-card.recommended {
+  background: #0b2b47;
+  border-color: #43d5fa;
+}
+
+.analyzer-numeric-card.recommended strong,
+.analyzer-numeric-arrow,
+.analyzer-difference {
+  color: #43d5fa !important;
+}
+
+.analyzer-test-button {
+  color: #80ddff;
+  border-color: #43d5fa;
+}
+
+.analyzer-test-button:hover {
+  background: #102943;
+}
+
+.analyzer-spinner {
+  border-top-color: #43d5fa;
+  border-right-color: #147fd0;
+}
+
+.analyzer-loading .analyzer-loading-status {
+  color: #43d5fa;
+}
+
+/* Consistência visual */
+.pro-details-btn:focus-visible,
+.pro-apply-btn:focus-visible,
+.analyzer-button:focus-visible,
+.analyzer-test-button:focus-visible {
+  outline: 2px solid #43d5fa;
+  outline-offset: 3px;
+}
+
+/* ===== SHOS LAB 3D ===== */
+
+.lab3d-tab {
+  position: relative;
+  color: #bdeeff !important;
+  background: linear-gradient(135deg, #073d72, #087fc9) !important;
+  border: 1px solid #43d5fa !important;
+  box-shadow: 0 0 12px #147fd055, inset 0 0 12px #43d5fa15;
+}
+
+.lab3d-tab:hover,
+.lab3d-tab.chosen {
+  color: #fff !important;
+  background: linear-gradient(135deg, #0864ae, #129ce8) !important;
+  box-shadow: 0 0 22px #149cff80;
+}
+
+.lab3d-section {
+  margin: 28px 0;
+  padding: 24px;
+  scroll-margin-top: 20px;
+  background:
+    radial-gradient(ellipse at 20% 0%, #0b4676 0%, transparent 50%),
+    linear-gradient(145deg, #081a2d, #040d19);
+  border: 1px solid #147fd0;
+  border-radius: 12px;
+  box-shadow: 0 0 30px #087fc91a;
+}
+
+.lab3d-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.lab3d-eyebrow {
+  color: #43d5fa;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.lab3d-header h2 {
+  margin: 8px 0;
+  font-size: clamp(30px, 4vw, 44px);
+}
+
+.lab3d-header h2 span {
+  color: #43d5fa;
+  text-shadow: 0 0 20px #147fd080;
+}
+
+.lab3d-header p {
+  color: #91acc3;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.lab3d-status {
+  padding: 9px 12px;
+  color: #80ddff;
+  border: 1px solid #147fd0;
+  background: #082746;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.lab3d-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(240px, .8fr);
+  gap: 16px;
+}
+
+.lab3d-viewport,
+.lab3d-info {
+  min-width: 0;
+  background: #061424;
+  border: 1px solid #244b6b;
+  border-radius: 8px;
+}
+
+.lab3d-viewport {
+  overflow: hidden;
+}
+
+.lab3d-viewport-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px;
+  color: #80ddff;
+  background: #0a2138;
+  border-bottom: 1px solid #244b6b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .8px;
+}
+
+#lab3d-canvas {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at center, #0c3455 0%, #061424 65%, #040d17 100%);
+}
+
+#lab3d-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+
+.lab3d-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  color: #91acc3;
+  border-top: 1px solid #244b6b;
+  font-size: 10px;
+}
+
+.lab3d-controls button {
+  padding: 9px 12px;
+  color: #bdeeff;
+  background: #0b2944;
+  border: 1px solid #147fd0;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.lab3d-controls button:hover {
+  background: #104674;
+}
+
+.lab3d-info {
+  padding: 20px;
+}
+
+.lab3d-selected-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 20px 0 13px;
+  color: #43d5fa;
+  background: #0b2944;
+  border: 1px solid #147fd0;
+  border-radius: 8px;
+  font-size: 25px;
+}
+
+.lab3d-info h3 {
+  margin-bottom: 10px;
+  font-size: 25px;
+}
+
+.lab3d-info p {
+  color: #a5b9ca;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.lab3d-info-line {
+  height: 1px;
+  margin: 20px 0;
+  background: #244b6b;
+}
+
+.lab3d-label {
+  color: #43d5fa;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.lab3d-parts {
+  display: grid;
+  gap: 7px;
+  margin-top: 20px;
+}
+
+.lab3d-parts button {
+  padding: 12px;
+  text-align: left;
+  color: #c5dcec;
+  background: #0a2138;
+  border: 1px solid #244b6b;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.lab3d-parts button:hover,
+.lab3d-parts button.active {
+  color: white;
+  background: #104674;
+  border-color: #43d5fa;
+  box-shadow: inset 3px 0 #43d5fa;
+}
+
+@media (max-width: 900px) {
+  .lab3d-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #lab3d-canvas {
+    height: 360px;
+  }
+}
+
+@media (max-width: 520px) {
+  .lab3d-section {
+    padding: 13px;
+  }
+
+  .lab3d-header {
+    flex-direction: column;
+  }
+
+  #lab3d-canvas {
+    height: 290px;
+  }
+
+  .lab3d-info {
+    padding: 15px;
+  }
 }

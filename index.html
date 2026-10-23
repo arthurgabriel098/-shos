@@ -25,6 +25,9 @@
   <button class="top-tab chosen" data-top-tab="CONTROLE">
     <i class="fa-solid fa-sliders"></i> CONTROLE
   </button>
+  <button class="top-tab lab3d-tab" data-top-tab="LAB 3D">
+  <i class="fa-solid fa-cube"></i> LAB 3D
+</button>
 </div>
       
 <div class="user">
@@ -237,7 +240,56 @@ src="https://prosettings.net/wp-content/uploads/reet-220x220-fitcontain-q99-gb28
     </div>
   </div>
 </section>
+<section id="lab3d-section" class="lab3d-section">
+  <div class="lab3d-header">
+    <div>
+      <span class="lab3d-eyebrow">SHOS PERFORMANCE LAB // 001</span>
+      <h2>CONTROLLER <span>LAB 3D</span></h2>
+      <p>Explore seu controle. Entenda cada componente. Refine sua gameplay.</p>
+    </div>
+    <span class="lab3d-status">● SISTEMA 3D</span>
+  </div>
 
+  <div class="lab3d-layout">
+    <div class="lab3d-viewport">
+      <div class="lab3d-viewport-top">
+        <span>DUALSENSE // EXPLORER</span>
+        <span id="lab3d-view-status">MODELO INTERATIVO</span>
+      </div>
+
+      <div id="lab3d-canvas"></div>
+
+      <div class="lab3d-controls">
+        <span><i class="fa-solid fa-hand-pointer"></i> Arraste para girar</span>
+        <button type="button" id="lab3d-reset">REDEFINIR VISÃO ↺</button>
+      </div>
+    </div>
+
+    <aside class="lab3d-info">
+      <span class="lab3d-eyebrow">COMPONENTE SELECIONADO</span>
+      <div class="lab3d-selected-icon" id="lab3d-icon">⌖</div>
+      <h3 id="lab3d-part-title">Explore o controle</h3>
+      <p id="lab3d-part-description">
+        Clique em uma parte do modelo para conhecer sua função.
+      </p>
+
+      <div class="lab3d-info-line"></div>
+
+      <span class="lab3d-label">RELAÇÃO COM A SENSIBILIDADE</span>
+      <p id="lab3d-setting-info">
+        Selecione um componente para ver as configurações relacionadas.
+      </p>
+
+      <div class="lab3d-parts">
+        <button type="button" data-lab-part="left-stick">ANALÓGICO ESQUERDO</button>
+        <button type="button" data-lab-part="right-stick">ANALÓGICO DIREITO</button>
+        <button type="button" data-lab-part="triggers">GATILHOS L2 / R2</button>
+        <button type="button" data-lab-part="buttons">BOTÕES DE AÇÃO</button>
+        <button type="button" data-lab-part="dpad">DIRECIONAL</button>
+      </div>
+    </aside>
+  </div>
+</section>
 
       <div class="content">
         <nav class="sidebar">
@@ -328,5 +380,6 @@ src="https://prosettings.net/wp-content/uploads/reet-220x220-fitcontain-q99-gb28
   <div id="toast" class="toast hidden"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
+<script type="module" src="lab3d.js"></script>
 </body>
 </html>
