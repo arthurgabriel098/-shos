@@ -778,6 +778,51 @@ document.querySelectorAll("[data-pro]").forEach(button => {
   });
 });
 
+function applyProPreset(id) {
+  const pro = proPresets[id];
+
+  if (!pro) {
+    console.error("SHOS: preset profissional não encontrado:", id);
+    toast("Não foi possível encontrar essa sensibilidade.");
+    return;
+  }
+
+  const confirmed = confirm(
+    `Deseja aplicar a sensibilidade de ${pro.name}?\n\n` +
+    "Os valores atuais do seu rascunho serão substituídos. " +
+    "Se quiser preservá-los, salve um preset antes."
+  );
+
+  if (!confirmed) return;
+
+  // Aplica os valores do profissional e mantém os demais campos válidos.
+  values = {
+    ...freshValues(),
+    ...pro.values
+  };
+
+  // Cria um rascunho separado, sem sobrescrever um preset salvo.
+  currentId = null;
+
+  const nameInput = document.querySelector("#preset-name");
+
+  if (nameInput) {
+    nameInput.value = `Sensi ${pro.name}`;
+  }
+
+  // Salva e atualiza os controles visíveis.
+  saveLocal();
+  render();
+  updateStats();
+
+  toast(`Sensi de ${pro.name} aplicada ao rascunho!`);
+
+  document.querySelector(".settings")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
 document.querySelectorAll("[data-apply-pro]").forEach(button => {
   button.addEventListener("click", () => {
     applyProPreset(button.dataset.applyPro);
